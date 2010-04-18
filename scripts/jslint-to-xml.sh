@@ -26,12 +26,14 @@ if [ -a "${1}" ] && [ -d "${2}" ]; then
     }
 
     LINTEE=$1
+    REPORT_ROOT=$2
+
+    # @TODO:    Extract these into some sort of nice function
+    LINTEE_TYPE=`echo ${LINTEE} | sed 's#\(.*\)\.\([^\.]*\)$#\2#'`
+    LINTEE_BASENAME=`basename ${LINTEE} | sed 's#\(.*\)\.\([^\.]*\)$#\1#'`
+
     TEST_BASENAME="${TEST_BASENAME}.jslint.${LINTEE_TYPE}.${LINTEE_BASENAME}"
     REPORT_FILENAME="${REPORT_ROOT}/${TEST_BASENAME}.xml"
-    mkdir -p $REPORT_ROOT || {
-        echo "FATAL: Couldn't create directory for reports"
-        exit 1
-    }
 
     LINT_TIME=`{ time ${JSLINT} "${LINTEE}" 2>&1 1> "${TEMP}"; } 2>&1 | grep real | sed 's#.*m\(.*\)s#\1#'`
     LINT_RESULTS=$(<"${TEMP}")
