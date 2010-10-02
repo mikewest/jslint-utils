@@ -9,7 +9,8 @@
 RHINO=../lib/js.jar
 
 # The path (relative to this script file) to the JSLint JS:
-JSLINT=../lib/rhinoed_jslint.js
+RHINO_JSLINT=../lib/rhinoed_jslint.js
+NODE_JSLINT=../lib/node_jslint.js
 
 ###########################################################################
 #
@@ -18,7 +19,8 @@ JSLINT=../lib/rhinoed_jslint.js
 #
 SCRIPTPATH=`dirname ${0}`
 RHINO="${SCRIPTPATH}/${RHINO}"
-JSLINT="${SCRIPTPATH}/${JSLINT}"
+RHINO_JSLINT="${SCRIPTPATH}/${RHINO_JSLINT}"
+NODE_JSLINT="${SCRIPTPATH}/${NODE_JSLINT}"
 
 if [ -a "$1" ]; then
     LINTEE=$1
@@ -42,7 +44,11 @@ if [ -a "$1" ]; then
         TODISPLAY=$LINTEE
     fi
 
-    java -jar ${RHINO} ${JSLINT} "${TOPARSE}" "${TODISPLAY}"
+    if [ -n "`which node`" ]; then
+        node ${NODE_JSLINT} "${TOPARSE}" "${TODISPLAY}"
+    else
+        java -jar ${RHINO} ${RHINO_JSLINT} "${TOPARSE}" "${TODISPLAY}"
+    fi
 else
     echo "Usage: ${0} <file to lint>"
     exit 1
