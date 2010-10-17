@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>run-jslint.sh</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+        <a class="source" href="jslint-to-xml.html">jslint-to-xml.sh</a>
+        <a class="source" href="run-jslint.html">run-jslint.sh</a>
+        </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>run-jslint.sh</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>Lints a specified file, using either <a href="http://www.mozilla.org/rhino/">Rhino</a> or <a href="http://nodejs.org/">Node.js</a> as
+an engine.  You&rsquo;ll need to ensure that one or the other is
+installed on any machine on which you&rsquo;d like to lint.</p>
+
+<p>Rhino is included as part of this package (<code>./lib/js.jar</code>), so that
+realy boils down to either installing Node, or Java.  Node will be
+<em>much</em> faster&hellip;</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <h2>Config</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-4">&#182;</a>
+        </div>
+        <p>The path (relative to this script file) to the Rhino JAR:</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nv">RHINO</span><span class="o">=</span>../lib/js.jar</pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>The path (relative to this script file) to the JSLint JS files for Rhino:</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nv">RHINO_JSLINT</span><span class="o">=</span>../lib/rhinoed_jslint.js</pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>and Node:</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nv">NODE_JSLINT</span><span class="o">=</span>../lib/node_jslint.js</pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
+        </div>
+        <h2>Script (No touchies)</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-8'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-8">&#182;</a>
+        </div>
+        <p>Store the current script&rsquo;s directory, and use it to generate paths to
+Rhino and the two JSLinting instances.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nv">SCRIPTPATH</span><span class="o">=</span><span class="sb">`</span>dirname <span class="k">${</span><span class="nv">0</span><span class="k">}</span><span class="sb">`</span>
+<span class="nv">RHINO</span><span class="o">=</span><span class="s2">&quot;${SCRIPTPATH}/${RHINO}&quot;</span>
+<span class="nv">RHINO_JSLINT</span><span class="o">=</span><span class="s2">&quot;${SCRIPTPATH}/${RHINO_JSLINT}&quot;</span>
+<span class="nv">NODE_JSLINT</span><span class="o">=</span><span class="s2">&quot;${SCRIPTPATH}/${NODE_JSLINT}&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-9'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-9">&#182;</a>
+        </div>
+        <p>Write out usage information if we don&rsquo;t have a file to work with.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">if</span> <span class="o">[</span> ! -e <span class="s2">&quot;$1&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Usage: ${0} &lt;file to lint&gt;&quot;</span>
+    <span class="nb">exit </span>1</pre></div>
+      </td>
+    </tr>
+    <tr id='section-10'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-10">&#182;</a>
+        </div>
+        <p>Assuming we <em>do</em> have a file, then store the filename, and parse
+out the file extension.  We&rsquo;ll use that in a moment to determine
+how we process the file.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">else</span>
+<span class="k">    </span><span class="nv">LINTEE</span><span class="o">=</span><span class="nv">$1</span>
+    <span class="nv">LINTEE_TYPE</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINTEE</span><span class="k">}</span> | sed <span class="s1">&#39;s#\(.*\)\.\([^\.]*\)$#\2#&#39;</span><span class="sb">`</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-11'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-11">&#182;</a>
+        </div>
+        <p>For CSS files, prepend <code>@charset "UTF-8";</code>, write to a temp file
+and parse <em>that</em> file rather than the original.  This is much simpler
+than stripping out the charset from each file when minimizing (It
+made sense at the time, anyway&hellip;).</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;${LINTEE_TYPE}&quot;</span> <span class="o">==</span> <span class="s2">&quot;css&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">        </span><span class="nv">TOPARSE</span><span class="o">=</span><span class="sb">`</span>mktemp -t csslintreport.XXXXXX<span class="sb">`</span> <span class="o">||</span> <span class="o">{</span>
+            <span class="nb">echo</span> <span class="s2">&quot;FATAL: Couldn&#39;t create temp file for reports&quot;</span>
+            <span class="nb">exit </span>1
+        <span class="o">}</span>
+        awk -v <span class="nv">PREPEND</span><span class="o">=</span><span class="s1">&#39;@charset &quot;UTF-8&quot;;&#39;</span> <span class="s1">&#39;BEGIN {print PREPEND}{print}&#39;</span> <span class="k">${</span><span class="nv">LINTEE</span><span class="k">}</span> &gt; <span class="k">${</span><span class="nv">TOPARSE</span><span class="k">}</span>
+        <span class="nv">TODISPLAY</span><span class="o">=</span><span class="nv">$LINTEE</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-12'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-12">&#182;</a>
+        </div>
+        <p>For everything else (that is, JavaScript, because what else is
+there?) run against the file itself.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">else</span>
+<span class="k">        </span><span class="nv">TOPARSE</span><span class="o">=</span><span class="nv">$LINTEE</span>
+        <span class="nv">TODISPLAY</span><span class="o">=</span><span class="nv">$LINTEE</span>
+    <span class="k">fi</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-13'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-13">&#182;</a>
+        </div>
+        <p>We&rsquo;ve got all the information we need: Now we need to decide
+which engine we use.  If <code>node</code> exists, use it.  It&rsquo;s amazingly
+fast.  Much, much, much faster than Rhino.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;`which node`&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">        </span>node <span class="k">${</span><span class="nv">NODE_JSLINT</span><span class="k">}</span> <span class="s2">&quot;${TOPARSE}&quot;</span> <span class="s2">&quot;${TODISPLAY}&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-14'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-14">&#182;</a>
+        </div>
+        <p>Fallback to Rhino if we have to.  Even though it&rsquo;s ugly and
+slow and makes babies cry.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">else</span>
+<span class="k">        </span>java -jar <span class="k">${</span><span class="nv">RHINO</span><span class="k">}</span> <span class="k">${</span><span class="nv">RHINO_JSLINT</span><span class="k">}</span> <span class="s2">&quot;${TOPARSE}&quot;</span> <span class="s2">&quot;${TODISPLAY}&quot;</span>
+    <span class="k">fi</span>
+<span class="k">fi</span></pre></div>
+      </td>
+    </tr>
+    </table>
+</div>
+</body>

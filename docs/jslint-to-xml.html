@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>jslint-to-xml.sh</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+        <a class="source" href="jslint-to-xml.html">jslint-to-xml.sh</a>
+        <a class="source" href="run-jslint.html">run-jslint.sh</a>
+        </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>jslint-to-xml.sh</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>Using <code>run-jslint.sh</code>, we&rsquo;ll generate linting results in an XML format
+that&rsquo;s similar enough to JUnit to trick Hudson, et al. into accepting
+them as unit test results that can be rendered after every build.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <h2>Config</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-4">&#182;</a>
+        </div>
+        <p>The path (relative to this script file) to the JSLint script:</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nv">JSLINT</span><span class="o">=</span>./run-jslint.sh</pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>The base of the test name that will be reported in Hudson (this will
+expand to <code>${TEST_BASENAME}.jslint.[TYPE].[FILENAME]</code>, for example
+<code>org.mikewest.static.jslint.js.javascriptfilename1</code>):</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nv">TEST_BASENAME</span><span class="o">=</span><span class="s2">&quot;org.mikewest.static&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <h2>SCRIPT (no touchies)</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
+        </div>
+        <p>Store the current script&rsquo;s directory, and use it to generate paths to
+the JSLinting script (<code>run-jslint.sh</code>).</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nv">SCRIPTPATH</span><span class="o">=</span><span class="sb">`</span>dirname <span class="k">${</span><span class="nv">0</span><span class="k">}</span><span class="sb">`</span>
+<span class="nv">JSLINT</span><span class="o">=</span><span class="s2">&quot;${SCRIPTPATH}/${JSLINT}&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-8'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-8">&#182;</a>
+        </div>
+        <p>The script expects two arguments: the file to lint, and the path in
+which report XML files should be created.  If one or the other is
+missing, print usage info, and exit.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">if</span> <span class="o">[</span> ! -e <span class="s2">&quot;${1}&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> ! -d <span class="s2">&quot;${2}&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Usage: ${0} &lt;file to lint&gt; &lt;path to reports&gt;&quot;</span>
+    <span class="nb">exit </span>1</pre></div>
+      </td>
+    </tr>
+    <tr id='section-9'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-9">&#182;</a>
+        </div>
+        <p>Otherwise&hellip;</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">else</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-10'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-10">&#182;</a>
+        </div>
+        <p>Generate a temporary report file.  We have to do a bit of bash
+hackery to get the data we need: this file is part of that, slightly
+dirty, but necessary.  If we can&rsquo;t generate the file, exit.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nv">TEMP</span><span class="o">=</span><span class="sb">`</span>mktemp -t jslintreport.XXXXXX<span class="sb">`</span> <span class="o">||</span> <span class="o">{</span>
+        <span class="nb">echo</span> <span class="s2">&quot;FATAL: Couldn&#39;t create temp file for reports&quot;</span>
+        <span class="nb">exit </span>1
+    <span class="o">}</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-11'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-11">&#182;</a>
+        </div>
+        <p>Give the script&rsquo;s two arguments nicer names: <code>LINTEE</code> is the file
+to be processed, <code>REPORT_ROOT</code> is, surprisingly enough, the directory
+into which we&rsquo;ll stuff reports.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nv">LINTEE</span><span class="o">=</span><span class="nv">$1</span>
+    <span class="nv">REPORT_ROOT</span><span class="o">=</span><span class="nv">$2</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-12'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-12">&#182;</a>
+        </div>
+        <p>Process <code>LINTEE</code> to extract the file extension and basename.  We&rsquo;ll
+use both to generate the test name that&rsquo;s displayed in Hudson.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nv">LINTEE_TYPE</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINTEE</span><span class="k">}</span> | sed <span class="s1">&#39;s#\(.*\)\.\([^\.]*\)$#\2#&#39;</span><span class="sb">`</span>
+    <span class="nv">LINTEE_BASENAME</span><span class="o">=</span><span class="sb">`</span>basename <span class="k">${</span><span class="nv">LINTEE</span><span class="k">}</span> | sed <span class="s1">&#39;s#\(.*\)\.\([^\.]*\)$#\1#&#39;</span><span class="sb">`</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-13'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-13">&#182;</a>
+        </div>
+        <p>Using the extension and basename, generate a test name in the form:
+<code>[BASENAME].jslint.[EXTENSION].[BASENAME]</code>.  We&rsquo;ll use this to generate
+a report XML file of the same name (<code>[REPORT ROOT]/[TEST NAME].xml</code>):</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nv">TEST_BASENAME</span><span class="o">=</span><span class="s2">&quot;${TEST_BASENAME}.jslint.${LINTEE_TYPE}.${LINTEE_BASENAME}&quot;</span>
+    <span class="nv">REPORT_FILENAME</span><span class="o">=</span><span class="s2">&quot;${REPORT_ROOT}/${TEST_BASENAME}.xml&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-14'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-14">&#182;</a>
+        </div>
+        <p>The core; this is stunningly ugly.  So, let&rsquo;s break it down:</p>
+
+<p>We want the result of <code>run-jslint.sh [LINTEE]</code>.  So run that command, and
+pipe all it&rsquo;s output (STDOUT/STDERR) into the temporary file we created
+earlier (<code>TEMP</code>) for processing later on.</p>
+
+<p>We also, however, want to know how long the test took to run.  That&rsquo;s a
+bit of a pain in the ass.  Running the previous command through <code>time</code>
+will output the time info we want on STDERR.  But not the same STDERR
+as the command itself, which means it won&rsquo;t be in the file we&rsquo;ve just
+filled with data.  The solution is to wrap the entire <code>time</code> call in
+a subshell, and to process the <em>list&rsquo;s</em> STDOUT.  Grep for &ldquo;real&rdquo; to
+get the wallclock time, then <code>sed</code> out the seconds.</p>
+
+<p>What a mess.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nv">LINT_TIME</span><span class="o">=</span><span class="sb">`</span><span class="o">(</span> <span class="nb">time</span> <span class="k">${</span><span class="nv">JSLINT</span><span class="k">}</span> <span class="s2">&quot;${LINTEE}&quot;</span> 2&gt;&amp;1 1&gt; <span class="s2">&quot;${TEMP}&quot;</span>; <span class="o">)</span> 2&gt;&amp;1 | grep real | sed <span class="s1">&#39;s#.*m\(.*\)s#\1#&#39;</span><span class="sb">`</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-15'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-15">&#182;</a>
+        </div>
+        <p>After all that, read the tempfile back into <code>LINT_RESULTS</code>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nv">LINT_RESULTS</span><span class="o">=</span><span class="k">$(</span>&lt;<span class="s2">&quot;${TEMP}&quot;</span><span class="k">)</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-16'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-16">&#182;</a>
+        </div>
+        <p>If the tempfile contains &ldquo;No problems found in&rdquo;, then the test passed
+without issue.  If not, failure!  Oh, the misery!</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nv">WAS_FAILURE</span><span class="o">=</span><span class="sb">`</span>cat <span class="s2">&quot;${TEMP}&quot;</span> | grep -v <span class="s1">&#39;No problems found in&#39;</span><span class="sb">`</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-17'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-17">&#182;</a>
+        </div>
+        <p>And now we&rsquo;re completely finished with the temp file.  Kill it.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    rm <span class="k">${</span><span class="nv">TEMP</span><span class="k">}</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-18'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-18">&#182;</a>
+        </div>
+        <p>If the test failed, write out a testsuite XML block into the
+<code>REPORT_FILENAME</code>, and dump the error messages into a CDATA field.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;---${WAS_FAILURE}---&quot;</span> !<span class="o">=</span> <span class="s2">&quot;------&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">        </span><span class="nb">echo</span> <span class="s2">&quot;&lt;testsuite failures=&#39;1&#39; time=&#39;${LINT_TIME}&#39; errors=&#39;1&#39; tests=&#39;1&#39; skipped=&#39;0&#39; name=&#39;${TEST_BASENAME}&#39;&gt;&quot;</span> &gt; <span class="nv">$REPORT_FILENAME</span>
+        <span class="nb">echo</span> <span class="s2">&quot;  &lt;testcase time=&#39;${LINT_TIME}&#39; name=&#39;testJSLint&#39; classname=&#39;${TEST_BASENAME}&#39;&gt;&quot;</span> &gt;&gt; <span class="nv">$REPORT_FILENAME</span>
+        <span class="nb">echo</span> <span class="s2">&quot;    &lt;error message=&#39;${LINTEE_BASENAME} failed JSLint.&#39;&gt;&lt;![CDATA[${LINT_RESULTS}]]&gt;&lt;/error&gt;&quot;</span> &gt;&gt; <span class="nv">$REPORT_FILENAME</span>
+        <span class="nb">echo</span> <span class="s2">&quot;  &lt;/testcase&gt;&quot;</span> &gt;&gt; <span class="nv">$REPORT_FILENAME</span>
+        <span class="nb">echo</span> <span class="s2">&quot;&lt;/testsuite&gt;&quot;</span> &gt;&gt; <span class="nv">$REPORT_FILENAME</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-19'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-19">&#182;</a>
+        </div>
+        <p>Otherwise, success!  Dump a testsuite XML block into the file
+with 0 failures, and no <code>error</code> body.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">else</span>
+<span class="k">        </span><span class="nb">echo</span> <span class="s2">&quot;&lt;testsuite failures=&#39;0&#39; time=&#39;${LINT_TIME}&#39; errors=&#39;0&#39; tests=&#39;1&#39; skipped=&#39;0&#39; name=&#39;${TEST_BASENAME}&#39;&gt;&quot;</span> &gt; <span class="nv">$REPORT_FILENAME</span>
+        <span class="nb">echo</span> <span class="s2">&quot;  &lt;testcase time=&#39;${LINT_TIME}&#39; name=&#39;testJSLint&#39; classname=&#39;${TEST_BASENAME}&#39;&gt;&quot;</span> &gt;&gt; <span class="nv">$REPORT_FILENAME</span>
+        <span class="nb">echo</span> <span class="s2">&quot;  &lt;/testcase&gt;&quot;</span> &gt;&gt; <span class="nv">$REPORT_FILENAME</span>
+        <span class="nb">echo</span> <span class="s2">&quot;&lt;/testsuite&gt;&quot;</span> &gt;&gt; <span class="nv">$REPORT_FILENAME</span>
+    <span class="k">fi</span>
+<span class="k">fi</span></pre></div>
+      </td>
+    </tr>
+    </table>
+</div>
+</body>
