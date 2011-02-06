@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=utf-8">
   <title>run-jslint.sh</title>
-  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+  <link rel="stylesheet" href="http://github.com/jashkenas/docco/raw/0.3.0/resources/docco.css">
 </head>
 <body>
 <div id='container'>
@@ -148,7 +148,7 @@ how we process the file.</p>
       <td class=code>
         <div class='highlight'><pre><span class="k">else</span>
 <span class="k">    </span><span class="nv">LINTEE</span><span class="o">=</span><span class="nv">$1</span>
-    <span class="nv">LINTEE_TYPE</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINTEE</span><span class="k">}</span> | sed <span class="s1">&#39;s#\(.*\)\.\([^\.]*\)$#\2#&#39;</span><span class="sb">`</span></pre></div>
+    <span class="nv">LINTEE_TYPE</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="s2">&quot;${LINTEE}&quot;</span> | sed <span class="s1">&#39;s#\(.*\)\.\([^\.]*\)$#\2#&#39;</span><span class="sb">`</span></pre></div>
       </td>
     </tr>
     <tr id='section-11'>
@@ -167,7 +167,7 @@ made sense at the time, anyway&hellip;).</p>
             <span class="nb">echo</span> <span class="s2">&quot;FATAL: Couldn&#39;t create temp file for reports&quot;</span>
             <span class="nb">exit </span>1
         <span class="o">}</span>
-        awk -v <span class="nv">PREPEND</span><span class="o">=</span><span class="s1">&#39;@charset &quot;UTF-8&quot;;&#39;</span> <span class="s1">&#39;BEGIN {print PREPEND}{print}&#39;</span> <span class="k">${</span><span class="nv">LINTEE</span><span class="k">}</span> &gt; <span class="k">${</span><span class="nv">TOPARSE</span><span class="k">}</span>
+        awk -v <span class="nv">PREPEND</span><span class="o">=</span><span class="s1">&#39;@charset &quot;UTF-8&quot;;&#39;</span> <span class="s1">&#39;BEGIN {print PREPEND}{print}&#39;</span> <span class="s2">&quot;${LINTEE}&quot;</span> &gt; <span class="s2">&quot;${TOPARSE}&quot;</span>
         <span class="nv">TODISPLAY</span><span class="o">=</span><span class="nv">$LINTEE</span></pre></div>
       </td>
     </tr>
@@ -197,7 +197,7 @@ fast.  Much, much, much faster than Rhino.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>    <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;`which node`&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-<span class="k">        </span>node <span class="k">${</span><span class="nv">NODE_JSLINT</span><span class="k">}</span> <span class="s2">&quot;${TOPARSE}&quot;</span> <span class="s2">&quot;${TODISPLAY}&quot;</span></pre></div>
+<span class="k">        </span>node <span class="s2">&quot;${NODE_JSLINT}&quot;</span> <span class="s2">&quot;${TOPARSE}&quot;</span> <span class="s2">&quot;${TODISPLAY}&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-14'>
@@ -211,7 +211,7 @@ slow and makes babies cry.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>    <span class="k">else</span>
-<span class="k">        </span>java -jar <span class="k">${</span><span class="nv">RHINO</span><span class="k">}</span> <span class="k">${</span><span class="nv">RHINO_JSLINT</span><span class="k">}</span> <span class="s2">&quot;${TOPARSE}&quot;</span> <span class="s2">&quot;${TODISPLAY}&quot;</span>
+<span class="k">        </span>java -jar <span class="s2">&quot;${RHINO}&quot;</span> <span class="s2">&quot;${RHINO_JSLINT}&quot;</span> <span class="s2">&quot;${TOPARSE}&quot;</span> <span class="s2">&quot;${TODISPLAY}&quot;</span>
     <span class="k">fi</span>
 <span class="k">fi</span></pre></div>
       </td>

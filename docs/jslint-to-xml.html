@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=utf-8">
   <title>jslint-to-xml.sh</title>
-  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+  <link rel="stylesheet" href="http://github.com/jashkenas/docco/raw/0.3.0/resources/docco.css">
 </head>
 <body>
 <div id='container'>
@@ -173,8 +173,8 @@ into which we&rsquo;ll stuff reports.</p>
 use both to generate the test name that&rsquo;s displayed in Hudson.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>    <span class="nv">LINTEE_TYPE</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINTEE</span><span class="k">}</span> | sed <span class="s1">&#39;s#\(.*\)\.\([^\.]*\)$#\2#&#39;</span><span class="sb">`</span>
-    <span class="nv">LINTEE_BASENAME</span><span class="o">=</span><span class="sb">`</span>basename <span class="k">${</span><span class="nv">LINTEE</span><span class="k">}</span> | sed <span class="s1">&#39;s#\(.*\)\.\([^\.]*\)$#\1#&#39;</span><span class="sb">`</span></pre></div>
+        <div class='highlight'><pre>    <span class="nv">LINTEE_TYPE</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="s2">&quot;${LINTEE}&quot;</span> | sed <span class="s1">&#39;s#\(.*\)\.\([^\.]*\)$#\2#&#39;</span><span class="sb">`</span>
+    <span class="nv">LINTEE_BASENAME</span><span class="o">=</span><span class="sb">`</span>basename <span class="s2">&quot;${LINTEE}&quot;</span> | sed <span class="s1">&#39;s#\(.*\)\.\([^\.]*\)$#\1#&#39;</span><span class="sb">`</span></pre></div>
       </td>
     </tr>
     <tr id='section-13'>
@@ -213,7 +213,7 @@ get the wallclock time, then <code>sed</code> out the seconds.</p>
 <p>What a mess.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>    <span class="nv">LINT_TIME</span><span class="o">=</span><span class="sb">`</span><span class="o">(</span> <span class="nb">time</span> <span class="k">${</span><span class="nv">JSLINT</span><span class="k">}</span> <span class="s2">&quot;${LINTEE}&quot;</span> 2&gt;&amp;1 1&gt; <span class="s2">&quot;${TEMP}&quot;</span>; <span class="o">)</span> 2&gt;&amp;1 | grep real | sed <span class="s1">&#39;s#.*m\(.*\)s#\1#&#39;</span><span class="sb">`</span></pre></div>
+        <div class='highlight'><pre>    <span class="nv">LINT_TIME</span><span class="o">=</span><span class="sb">`</span><span class="o">(</span> <span class="nb">time</span> <span class="s2">&quot;${JSLINT}&quot;</span> <span class="s2">&quot;${LINTEE}&quot;</span> 2&gt;&amp;1 1&gt; <span class="s2">&quot;${TEMP}&quot;</span>; <span class="o">)</span> 2&gt;&amp;1 | grep real | sed <span class="s1">&#39;s#.*m\(.*\)s#\1#&#39;</span><span class="sb">`</span></pre></div>
       </td>
     </tr>
     <tr id='section-15'>
@@ -247,7 +247,7 @@ without issue.  If not, failure!  Oh, the misery!</p>
         <p>And now we&rsquo;re completely finished with the temp file.  Kill it.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>    rm <span class="k">${</span><span class="nv">TEMP</span><span class="k">}</span>
+        <div class='highlight'><pre>    rm <span class="s2">&quot;${TEMP}&quot;</span>
     </pre></div>
       </td>
     </tr>
