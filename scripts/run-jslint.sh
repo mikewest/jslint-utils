@@ -47,7 +47,7 @@ if [ ! -e "$1" ]; then
 #
 else
     LINTEE=$1
-    LINTEE_TYPE=`echo ${LINTEE} | sed 's#\(.*\)\.\([^\.]*\)$#\2#'`
+    LINTEE_TYPE=`echo "${LINTEE}" | sed 's#\(.*\)\.\([^\.]*\)$#\2#'`
 
     #
     # For CSS files, prepend `@charset "UTF-8";`, write to a temp file
@@ -60,7 +60,7 @@ else
             echo "FATAL: Couldn't create temp file for reports"
             exit 1
         }
-        awk -v PREPEND='@charset "UTF-8";' 'BEGIN {print PREPEND}{print}' ${LINTEE} > ${TOPARSE}
+        awk -v PREPEND='@charset "UTF-8";' 'BEGIN {print PREPEND}{print}' "${LINTEE}" > "${TOPARSE}"
         TODISPLAY=$LINTEE
     #
     # For everything else (that is, JavaScript, because what else is
@@ -77,12 +77,12 @@ else
     # fast.  Much, much, much faster than Rhino.
     #
     if [ -n "`which node`" ]; then
-        node ${NODE_JSLINT} "${TOPARSE}" "${TODISPLAY}"
+        node "${NODE_JSLINT}" "${TOPARSE}" "${TODISPLAY}"
     #
     # Fallback to Rhino if we have to.  Even though it's ugly and
     # slow and makes babies cry.
     #
     else
-        java -jar ${RHINO} ${RHINO_JSLINT} "${TOPARSE}" "${TODISPLAY}"
+        java -jar "${RHINO}" "${RHINO_JSLINT}" "${TOPARSE}" "${TODISPLAY}"
     fi
 fi

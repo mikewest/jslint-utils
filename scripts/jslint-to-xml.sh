@@ -65,8 +65,8 @@ else
     # Process `LINTEE` to extract the file extension and basename.  We'll
     # use both to generate the test name that's displayed in Hudson.
     #
-    LINTEE_TYPE=`echo ${LINTEE} | sed 's#\(.*\)\.\([^\.]*\)$#\2#'`
-    LINTEE_BASENAME=`basename ${LINTEE} | sed 's#\(.*\)\.\([^\.]*\)$#\1#'`
+    LINTEE_TYPE=`echo "${LINTEE}" | sed 's#\(.*\)\.\([^\.]*\)$#\2#'`
+    LINTEE_BASENAME=`basename "${LINTEE}" | sed 's#\(.*\)\.\([^\.]*\)$#\1#'`
 
     #
     # Using the extension and basename, generate a test name in the form:
@@ -93,7 +93,7 @@ else
     #
     # What a mess.
     #
-    LINT_TIME=`( time ${JSLINT} "${LINTEE}" 2>&1 1> "${TEMP}"; ) 2>&1 | grep real | sed 's#.*m\(.*\)s#\1#'`
+    LINT_TIME=`( time "${JSLINT}" "${LINTEE}" 2>&1 1> "${TEMP}"; ) 2>&1 | grep real | sed 's#.*m\(.*\)s#\1#'`
     #
     # After all that, read the tempfile back into `LINT_RESULTS`.
     #
@@ -108,7 +108,7 @@ else
     #
     # And now we're completely finished with the temp file.  Kill it.
     #
-    rm ${TEMP}
+    rm "${TEMP}"
     
     #
     # If the test failed, write out a testsuite XML block into the
