@@ -5,7 +5,7 @@ all: updatejslint ../rhinoed_jslint.js ../node_jslint.js
 fork:	updateforkedjslint ../rhinoed_jslint.js ../node_jslint.js
 
 updateforkedjslint:
-	@curl http://github.com/mikewest/jslint/raw/master/fulljslint.js > jslint.js
+	@curl -o jslint.js http://github.com/mikewest/jslint/raw/master/fulljslint.js
 
 updatejslint:
 	@curl -O http://www.JSLint.com/jslint.js
