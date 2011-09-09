@@ -72,7 +72,7 @@ else
         # slow and makes babies cry.
         #
         else
-            java -jar "./lib/${RHINO}" "${RHINO_CSSLINT}" "${TOPARSE}" "${TODISPLAY}"
+            java -jar "${SCRIPTPATH}/../lib/${RHINO}" "${RHINO_CSSLINT}" "${TOPARSE}" "${TODISPLAY}"
         fi
     #
     # For everything else (that is, JavaScript, because what else is
