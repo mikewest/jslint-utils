@@ -15,12 +15,12 @@
 # ------
 
 # The path (relative to this script file) to the Rhino JAR:
-RHINO=../lib/js.jar
+RHINO=js.jar
 
-# The path (relative to this script file) to the JSLint JS files for Rhino:
-RHINO_JSLINT=../lib/rhinoed_jslint.js
-# and Node:
-NODE_JSLINT=../lib/node_jslint.js
+# The path (relative to this script file) to the CSSLint files for Rhino:
+RHINO_CSSLINT=../lib/csslint-rhino.js
+# and JSLint:
+RHINO_JSLINT=../lib/jshint-rhino.js
 
 # Script (No touchies)
 # --------------------
@@ -30,9 +30,7 @@ NODE_JSLINT=../lib/node_jslint.js
 # Rhino and the two JSLinting instances.
 #
 SCRIPTPATH=`dirname ${0}`
-RHINO="${SCRIPTPATH}/${RHINO}"
-RHINO_JSLINT="${SCRIPTPATH}/${RHINO_JSLINT}"
-NODE_JSLINT="${SCRIPTPATH}/${NODE_JSLINT}"
+RHINO_CSSLINT="${SCRIPTPATH}/${RHINO_CSSLINT}"
 
 #
 # Write out usage information if we don't have a file to work with.
@@ -62,6 +60,20 @@ else
         }
         awk -v PREPEND='@charset "UTF-8";' 'BEGIN {print PREPEND}{print}' "${LINTEE}" > "${TOPARSE}"
         TODISPLAY=$LINTEE
+        #
+        # We've got all the information we need: Now we need to decide
+        # which engine we use.  If `node` exists, use it.  It's amazingly
+        # fast.  Much, much, much faster than Rhino.
+        #
+        if [ -n "`which csslint`" ]; then
+            csslint "${TOPARSE}" "${TODISPLAY}"
+        #
+        # Fallback to Rhino if we have to.  Even though it's ugly and
+        # slow and makes babies cry.
+        #
+        else
+            java -jar "./lib/${RHINO}" "${RHINO_CSSLINT}" "${TOPARSE}" "${TODISPLAY}"
+        fi
     #
     # For everything else (that is, JavaScript, because what else is
     # there?) run against the file itself.
@@ -69,20 +81,21 @@ else
     else
         TOPARSE=$LINTEE
         TODISPLAY=$LINTEE
-    fi
-
-    #
-    # We've got all the information we need: Now we need to decide
-    # which engine we use.  If `node` exists, use it.  It's amazingly
-    # fast.  Much, much, much faster than Rhino.
-    #
-    if [ -n "`which node`" ]; then
-        node "${NODE_JSLINT}" "${TOPARSE}" "${TODISPLAY}"
-    #
-    # Fallback to Rhino if we have to.  Even though it's ugly and
-    # slow and makes babies cry.
-    #
-    else
-        java -jar "${RHINO}" "${RHINO_JSLINT}" "${TOPARSE}" "${TODISPLAY}"
+        #
+        # We've got all the information we need: Now we need to decide
+        # which engine we use.  If `node` exists, use it.  It's amazingly
+        # fast.  Much, much, much faster than Rhino.
+        #
+        if [ -n "`which jshint`" ]; then
+            jshint "${TOPARSE}" "${TODISPLAY}"
+        #
+        # Fallback to Rhino if we have to.  Even though it's ugly and
+        # slow and makes babies cry.
+        #
+        else
+            FULLDIR=`pwd`
+            cd lib/
+            java -jar "${RHINO}" "${RHINO_JSLINT}" "${FULLDIR}/${TOPARSE}" "${TODISPLAY}"
+        fi
     fi
 fi

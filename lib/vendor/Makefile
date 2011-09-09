@@ -1,4 +1,4 @@
-.PHONY:	all updatejslint updateforkedjslint updatejshint updatecsslint ../node_lint.js ../rhinoed_lint.js
+.PHONY:	all updatejslint updateforkedjslint updatejshint updatecsslint ../rhinoed_lint.js
 
 all: updatejslint updatejshint updatecsslint ../node_lint.js ../rhinoed_lint.js
 
@@ -15,10 +15,6 @@ updatejshint:
 updatecsslint:
 	@curl -O https://raw.github.com/stubbornella/csslint/master/release/csslint.js
 	@cp jshint.js ../jshint.js
-
-../node_lint.js:
-	@cp jshint.js ../jshint.js
-	@curl -o ../csslint-node.js https://raw.github.com/stubbornella/csslint/master/release/csslint-node.js
 
 ../rhinoed_lint.js:
 	@curl -o ../jshint-rhino.js https://raw.github.com/jshint/jshint/master/env/jshint-rhino.js

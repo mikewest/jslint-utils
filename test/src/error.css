@@ -1,3 +1,7 @@
 omg-is-not-a-tagname {
     color:  red;
 }
+
+test {
+  /* Look at the missing tag! */
+  color: blue;
