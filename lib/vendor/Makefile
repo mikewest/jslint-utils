@@ -14,7 +14,6 @@ updatejshint:
 
 updatecsslint:
 	@curl -O https://raw.github.com/stubbornella/csslint/master/release/csslint.js
-	@cp jshint.js ../jshint.js
 
 ../rhinoed_lint.js:
 	@curl -o ../jshint-rhino.js https://raw.github.com/jshint/jshint/master/env/jshint-rhino.js
