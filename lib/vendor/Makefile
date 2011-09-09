@@ -1,6 +1,6 @@
 .PHONY:	all updatejslint updateforkedjslint updatejshint updatecsslint ../rhinoed_lint.js
 
-all: updatejslint updatejshint updatecsslint ../node_lint.js ../rhinoed_lint.js
+all: updatejslint updatejshint updatecsslint ../rhinoed_lint.js
 
 updateforkedjslint:
 	@curl -o jslint.js http://github.com/mikewest/jslint/raw/master/fulljslint.js
