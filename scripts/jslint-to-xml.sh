@@ -103,7 +103,7 @@ else
     # If the tempfile contains "No problems found in", then the test passed
     # without issue.  If not, failure!  Oh, the misery!
     #
-    WAS_FAILURE=`cat "${TEMP}" | grep -v 'No problems found in'`
+    WAS_FAILURE=`cat "${TEMP}" | grep -v 'No problems found in' | grep -v 'No errors in' | grep -v 'Lint Free!'`
 
     #
     # And now we're completely finished with the temp file.  Kill it.

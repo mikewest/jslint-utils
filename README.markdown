@@ -5,6 +5,11 @@ This is a set of utility files that wraps JSLint/Rhino, enabling easy
 linting on the command line, and automated reporting of linting errors
 via a continuous integration system like Hudson.
 
+## Dependencies:
+*  [node] npm packages
+   *  [node] jshint
+   *  [node] csslint
+
 Usage
 -----
 
